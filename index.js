@@ -49,6 +49,26 @@ async function run() {
             res.send(result);
         })
 
+        app.patch('/products/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            const updatedProduct = req.body;
+            const newProduct = {
+                $set: {
+                    name: updatedProduct.name,
+                    brand: updatedProduct.brand,
+                    photo: updatedProduct.photo,
+                    desc: updatedProduct.desc,
+                    type: updatedProduct.type,
+                    price: updatedProduct.price,
+                    rating : updatedProduct.rating
+                }
+            }
+            const result = await brandCollection.updateOne(filter, newProduct, options);
+            res.send(result)
+        })
+
         app.post('/products', async (req, res) => {
             const products = req.body;
             console.log(products)
@@ -66,6 +86,13 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/cart/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await cartCollection.findOne(query);
+            res.send(result)
+        })
+
         app.post('/cart', async (req, res) => {
             const items = req.body;
             console.log(items)
@@ -73,7 +100,12 @@ async function run() {
             res.send(result);
         })
 
-        
+        app.delete('/cart/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await cartCollection.deleteOne(query);
+            res.send(result);
+        })
 
 
         // User api starts from here

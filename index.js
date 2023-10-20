@@ -81,8 +81,8 @@ async function run() {
         // add item to Cart
 
         app.get('/cart', async (req, res) => {
-            const cursor = cartCollection.find();
-            const result = await cursor.toArray();
+            const filter = cartCollection.find();
+            const result = await filter.toArray();
             res.send(result)
         })
 
